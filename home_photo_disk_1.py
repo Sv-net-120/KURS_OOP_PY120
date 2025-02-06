@@ -3,7 +3,6 @@ from pprint import pprint
 import requests
 import json
 
-
 from tqdm import tqdm
 from api_vk import TOKEN
 import configparser
@@ -36,8 +35,12 @@ class VKClient:
     def get_profile_photos(self):
         params = self.get_common_params()
         params.update({'owner_id': self.user_id,'album_id': 'profile', 'extended': 1})
-        response = requests.get(f'{self.url}/photos.get', params=params)
-        return response.json()
+        try:
+            response = requests.get(f'{self.url}/photos.get', params=params)
+        except VKAPIError:
+            print(f'Возникла ошибка')
+        else:
+            return response.json()
 
     # выбираем самые большие фотографии и формируем информационный словарь
 
